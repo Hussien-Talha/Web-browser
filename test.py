@@ -4,8 +4,10 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtCore import QUrl
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLineEdit, QPushButton, QProgressBar, QLabel
 from PyQt5.QtWebEngineWidgets import QWebEngineView
+import sys
 
-# Define the main window class
+
+
 class BrowserWindow(QMainWindow):
     # Initialize the window
     def __init__(self):
@@ -183,11 +185,12 @@ def update_url_label(self, url):
     # Set the text of the URL label as the current URL
     self.url_label.setText(url.toString())
 
-# Create an instance of QApplication
-app = QApplication([])
-# Create an instance of BrowserWindow
-window = BrowserWindow()
-# Show the window
-window.show()
-# Run the application loop
-app.exec_()
+    def main ():
+        # Create an application object
+        app = QApplication(sys.argv)
+        # Create an instance of BrowserWindow
+        window = BrowserWindow()
+        # Show the window
+        window.show()
+        # Create a widget object
+        widget = QWidget()
