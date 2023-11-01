@@ -15,7 +15,7 @@ class WebGPT(QMainWindow):
         super().__init__()
         # Set the window title and icon
         self.setWindowTitle("WebGPT - The Generative Web Browser")
-        self.setWindowIcon(QIcon("wg.png"))
+        self.setWindowIcon(QIcon("favicon.png"))
         # Set the default window size
         self.resize(800, 600)
         # Create the central widget
@@ -254,115 +254,6 @@ class WebGPT(QMainWindow):
     def current_web_view(self):
         # Return the current widget of the tab widget
         return self.tab_widget.currentWidget()
-        
-    # Define the method to load the bookmarks from a file
-    def load_bookmarks(self):
-        # Try to open the bookmarks file
-        try:
-            with open("bookmarks.txt", "r") as file:
-                # Read each line of the file
-                for line in file:
-                    # Split the line by a comma
-                    url, title = line.split(",")
-                    # Strip the whitespace and newline characters
-                    url = url.strip()
-                    title = title.strip()
-                    # Create a bookmark dictionary with the url and title
-                    bookmark = {"url": url, "title": title}
-                    # Append the bookmark to the bookmarks list
-                    self.bookmarks.append(bookmark)
-        # Handle the exception if the file does not exist or is corrupted
-        except Exception as e:
-            # Print the error message
-            print(e)
-            
-# Define the method to add a bookmark to the bookmark layout
-    def add_bookmark(self, bookmark):
-        # Create a bookmark button
-        bookmark_button = QPushButton()
-        bookmark_button.setFixedSize(100, 30)
-        # Set the bookmark button text to the title or "No Title" if no title is available
-        bookmark_button.setText(bookmark["title"] or "No Title")
-        # Set the bookmark button icon to the favicon or a default icon if no favicon is available
-        bookmark_button.setIcon(QIcon(bookmark["url"] + "/favicon.ico") or QIcon("default.png"))
-        # Set the bookmark button tooltip to the url
-        bookmark_button.setToolTip(bookmark["url"])
-        # Connect the bookmark button to the load_bookmark method
-        bookmark_button.clicked.connect(lambda: self.load_bookmark(bookmark["url"]))
-        # Connect the bookmark button to the show_bookmark_menu method
-        bookmark_button.setContextMenuPolicy(Qt.CustomContextMenu)
-        bookmark_button.customContextMenuRequested.connect(lambda: self.show_bookmark_menu(bookmark))
-        # Add the bookmark button to the bookmark layout
-        self.bookmark_layout.addWidget(bookmark_button)
-        
-# Define the method to load a bookmarked web page
-    def load_bookmark(self, url):
-        # Load the url in the current web view
-        self.current_web_view().load(QUrl(url))
-        
-    # Define the method to show a bookmark context menu
-    def show_bookmark_menu(self, bookmark):
-        # Create a bookmark menu
-        bookmark_menu = QMenu()
-        # Create an edit action
-        edit_action = QAction("Edit")
-        # Connect the edit action to the edit_bookmark method
-        edit_action.triggered.connect(lambda: self.edit_bookmark(bookmark))
-        # Add the edit action to the bookmark menu
-        bookmark_menu.addAction(edit_action)
-        # Create a delete action
-        delete_action = QAction("Delete")
-        # Connect the delete action to the delete_bookmark method
-        delete_action.triggered.connect(lambda: self.delete_bookmark(bookmark))
-        # Add the delete action to the bookmark menu
-        bookmark_menu.addAction(delete_action)
-        # Show the bookmark menu at the cursor position
-        bookmark_menu.exec_(QCursor.pos())
-        
-# Define the method to edit a bookmark
-    def edit_bookmark(self, bookmark):
-        # Get the bookmark button from the bookmark layout
-        bookmark_button = self.bookmark_layout.itemAt(self.bookmarks.index(bookmark)).widget()
-        # Get the new url and title from the user input
-        new_url, ok1 = QInputDialog.getText(self, "Edit Bookmark", "Enter the new URL:")
-        new_title, ok2 = QInputDialog.getText(self, "Edit Bookmark", "Enter the new title:")
-        # Check if the user input is valid and not empty
-        if ok1 and ok2 and new_url and new_title:
-            # Update the bookmark dictionary with the new url and title
-            bookmark["url"] = new_url
-            bookmark["title"] = new_title
-            # Update the bookmark button text to the new title or "No Title" if no title is available
-            bookmark_button.setText(new_title or "No Title")
-            # Update the bookmark button icon to the new favicon or a default icon if no favicon is available
-            bookmark_button.setIcon(QIcon(new_url + "/favicon.ico") or QIcon("default.png"))
-            # Update the bookmark button tooltip to the new url
-            bookmark_button.setToolTip(new_url)
-            # Save the bookmarks to a file
-            self.save_bookmarks()
-            
-    # Define the method to delete a bookmark
-    def delete_bookmark(self, bookmark):
-        # Get the bookmark button from the bookmark layout
-        bookmark_button = self.bookmark_layout.itemAt(self.bookmarks.index(bookmark)).widget()
-        # Delete the bookmark button
-        bookmark_button.deleteLater()
-        # Remove the bookmark from the bookmarks list
-        self.bookmarks.remove(bookmark)
-        # Save the bookmarks to a file
-        self.save_bookmarks()
-        
-    # Define the method to save the bookmarks to a file
-    def save_bookmarks(self):
-        # Try to open the bookmarks file
-        try:
-            with open("bookmarks.txt", "w") as file:
-                # Write each bookmark to the file as a line with a comma separator
-                for bookmark in self.bookmarks:
-                    file.write(f"{bookmark['url']},{bookmark['title']}\n")
-        # Handle the exception if the file cannot be opened or written
-        except Exception as e:
-            # Print the error message
-            print(e)
             
 # Create an application instance
 app = QApplication(sys.argv)
